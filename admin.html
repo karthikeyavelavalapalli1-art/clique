@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLIQUE | Admin Portal</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <header class="navbar" style="background: rgba(10, 10, 10, 0.9);">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-badge">⚡</span>
+        <span class="logo-text">CLIQUE<span class="dot">.</span> <small style="font-size:0.65em; color:var(--accent-cyan); letter-spacing: 0.05em; font-weight:800;">[ADMIN]</small></span>
+      </a>
+      <div class="nav-actions">
+        <button class="btn btn-outline" id="theme-toggle" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+        <div class="user-profile-badge hidden" id="admin-profile-badge" style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.08); padding: 0.35rem 0.85rem; border-radius: var(--radius-full); border: 1px solid var(--border-color);">
+          <div id="admin-avatar" style="width: 28px; height: 28px; border-radius: 50%; background: var(--accent-cyan); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; overflow: hidden;"></div>
+          <span id="admin-display-name" style="font-size: 0.85rem; font-weight: 600;">Admin</span>
+          <button class="btn btn-sm btn-secondary" id="btn-admin-logout" style="margin-left: 0.5rem;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding-top: 100px; min-height: 100vh; display: flex; justify-content: center;">
+    
+    <!-- Admin Login View -->
+    <div id="admin-login-view" style="width: 100%; max-width: 440px; margin-top: 4rem;">
+      <div class="glass-panel" style="padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <span class="badge-pill" style="margin-bottom: 1rem; display: inline-block;"><i class="fa-solid fa-shield-halved"></i> Faculty & Admin</span>
+          <h2 style="font-family: var(--font-heading); font-size: 1.8rem;">Admin Portal</h2>
+        </div>
+
+        <div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
+          <div id="g_id_onload" data-callback="handleAdminGoogleLogin" data-auto_prompt="false"></div>
+          <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="filled_blue" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+        </div>
+
+        <div style="text-align: center; margin: 1.5rem 0; color: var(--text-muted); font-size: 0.85rem; display: flex; align-items: center; gap: 1rem;">
+          <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+          OR
+          <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+        </div>
+
+        <form id="admin-login-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div class="form-group">
+            <input type="text" id="admin-id-input" placeholder="Master Admin ID" required style="width: 100%; padding: 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); outline: none;">
+          </div>
+          <div class="form-group">
+            <input type="password" id="admin-pass-input" placeholder="Master Password" required style="width: 100%; padding: 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); outline: none;">
+          </div>
+          <div class="hidden" id="admin-login-error" style="color: #ef4444; font-size: 0.85rem; font-weight: 600; text-align: center; margin-bottom: -0.5rem;">
+            <i class="fa-solid fa-circle-exclamation"></i> Invalid Credentials!
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg w-full" style="margin-top: 0.5rem;">
+            <i class="fa-solid fa-right-to-bracket"></i> <span>Login with Password</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard View -->
+    <div id="admin-dashboard-view" class="hidden" style="width: 100%; max-width: 1200px; padding: 0 1rem; margin-bottom: 3rem; display: flex; gap: 2rem;">
+      
+      <!-- Sidebar -->
+      <aside style="width: 250px; flex-shrink: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+        <div class="glass-panel" style="padding: 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.5rem;">
+          <h3 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; margin-left: 0.5rem;">Menu</h3>
+          <button class="sidebar-btn active" data-tab="tab-rsvps"><i class="fa-solid fa-users"></i> RSVPs Database</button>
+          <button class="sidebar-btn" data-tab="tab-users"><i class="fa-solid fa-user-shield"></i> User Management</button>
+          <button class="sidebar-btn" data-tab="tab-event"><i class="fa-solid fa-calendar-check"></i> Event Configuration</button>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <div style="flex: 1; min-width: 0;">
+        <div class="glass-panel" style="padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); min-height: 600px;">
+          
+          <!-- TAB: RSVPs -->
+          <div id="tab-rsvps" class="admin-tab">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+              <h2 style="font-family: var(--font-heading); font-size: 1.8rem;">RSVPs Database</h2>
+              <div style="display: flex; gap: 0.75rem;">
+                <button class="btn btn-sm btn-outline" id="btn-export-csv"><i class="fa-solid fa-file-csv"></i> Export</button>
+                <button class="btn btn-sm btn-outline" id="btn-clear-all-rsvp" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);"><i class="fa-solid fa-trash"></i> Reset Data</button>
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+              <div class="glass-panel" style="padding: 1rem; text-align: center; border-radius: var(--radius-md);">
+                <span style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Total RSVPs</span>
+                <div id="stat-total-rsvp" style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; color: var(--accent-purple);">0</div>
+              </div>
+              <div class="glass-panel" style="padding: 1rem; text-align: center; border-radius: var(--radius-md);">
+                <span style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Juniors</span>
+                <div id="stat-juniors-count" style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; color: var(--accent-cyan);">0</div>
+              </div>
+              <div class="glass-panel" style="padding: 1rem; text-align: center; border-radius: var(--radius-md);">
+                <span style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Seniors</span>
+                <div id="stat-seniors-count" style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; color: var(--accent-pink);">0</div>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+              <input type="text" id="admin-search-input" placeholder="Search student by name..." style="width: 100%; padding: 0.85rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); outline: none;">
+            </div>
+
+            <div style="overflow-x: auto; max-height: 400px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+              <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                  <tr style="background: rgba(139, 92, 246, 0.15); border-bottom: 1px solid var(--border-color); color: var(--text-primary);">
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Student Name</th>
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Year / Role</th>
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Dept</th>
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Interest</th>
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Registered At</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB: Users (RBAC) -->
+          <div id="tab-users" class="admin-tab hidden">
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+              <h2 style="font-family: var(--font-heading); font-size: 1.8rem;">User Access Management</h2>
+              <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">Manage roles and permissions for users who have signed into the app.</p>
+            </div>
+            
+            <div style="overflow-x: auto; max-height: 500px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+              <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                  <tr style="background: rgba(6, 182, 212, 0.15); border-bottom: 1px solid var(--border-color); color: var(--text-primary);">
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">User Info</th>
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Roll Number</th>
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Contact No</th>
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Role</th>
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Permissions</th>
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Status</th>
+                    <th style="padding: 1rem; position: sticky; top: 0; background: #150F22;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB: Event Configuration -->
+          <div id="tab-event" class="admin-tab hidden">
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+              <h2 style="font-family: var(--font-heading); font-size: 1.8rem;">Event Schedule & Config</h2>
+              <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">Update the date, time, and venue for the upcoming CLIQUE session.</p>
+            </div>
+
+            <form id="event-config-form" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 600px;">
+              <div class="form-group">
+                <label>Event Date (e.g., "Saturday, Oct 14" or "Every Saturday")</label>
+                <input type="text" id="config-date" required style="width: 100%; padding: 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); outline: none;">
+              </div>
+              <div class="form-group">
+                <label>Event Time (e.g., "Morning 9:30 AM / Afternoon 2:00 PM")</label>
+                <input type="text" id="config-time" required style="width: 100%; padding: 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); outline: none;">
+              </div>
+              <div class="form-group">
+                <label>Event Venue</label>
+                <input type="text" id="config-venue" required style="width: 100%; padding: 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); outline: none;">
+              </div>
+              
+              <div style="height: 1px; background: var(--border-color); margin: 1rem 0;"></div>
+              <h3 style="font-size: 1.1rem; font-family: var(--font-heading); color: var(--accent-pink);">Past Week Winners</h3>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: -0.5rem;">Enter comma-separated team/student names who won last week.</p>
+              
+              <div class="form-group">
+                <textarea id="config-winners" rows="3" placeholder="Team Alpha, Team Beta, John Doe" style="width: 100%; padding: 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); outline: none; resize: vertical;"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="align-self: flex-start;"><i class="fa-solid fa-floppy-disk"></i> Save Event Details</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- CSS for Sidebar Buttons -->
+  <style>
+    .sidebar-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-sm);
+      text-align: left;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .sidebar-btn:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-primary);
+    }
+    .sidebar-btn.active {
+      background: rgba(139, 92, 246, 0.15);
+      border-color: rgba(139, 92, 246, 0.3);
+      color: var(--accent-purple);
+    }
+  </style>
+
+  <div id="toast-container"></div>
+  <script src="admin.js"></script>
+</body>
+</html>

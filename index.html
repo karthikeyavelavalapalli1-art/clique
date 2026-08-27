@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLIQUE | EEE Department Weekly Senior-Junior Bonding</title>
+  <meta name="description"
+    content="CLIQUE is the official weekly mandatory bonding event for 1st-year EEE juniors and 2nd-year EEE seniors at college.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Identity Services SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+  <!-- Canvas Background for animated background particles -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Header / Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <span class="logo-badge">⚡</span>
+        <span class="logo-text">CLIQUE<span class="dot">.</span> <small style="font-size:0.65em; color:var(--accent-cyan); letter-spacing: 0.05em; font-weight:800;">[EEE DEPT]</small></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#about">About</a>
+        <a href="#activities">Activities</a>
+        <a href="#gallery">Memories</a>
+        <a href="#faq">FAQ</a>
+        <a href="dashboard.html" id="nav-dashboard-link" style="color: var(--accent-pink); font-weight: 700;"><i class="fa-solid fa-user-circle"></i> Dashboard</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline" id="theme-toggle" title="Toggle Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <div class="user-profile-badge hidden" id="user-profile-badge" style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.08); padding: 0.35rem 0.85rem; border-radius: var(--radius-full); border: 1px solid var(--border-color);">
+          <div id="user-avatar" style="width: 28px; height: 28px; border-radius: 50%; background: var(--accent-cyan); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">S</div>
+          <span id="user-display-name" style="font-size: 0.85rem; font-weight: 600;">Student</span>
+          <button id="btn-student-logout" title="Sign Out" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; margin-left: 0.2rem;"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+        <a href="admin.html" class="btn btn-outline" title="Admin Portal">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>Admin</span>
+        </a>
+        <button class="btn btn-primary" id="btn-student-login" title="Student Google Login">
+          <i class="fa-brands fa-google"></i>
+          <span>Google Sign In</span>
+        </button>
+      </div>
+
+      <button class="mobile-menu-btn" id="mobile-menu-toggle">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <nav class="mobile-nav-links">
+      <a href="#about" class="mobile-link">About</a>
+      <a href="#activities" class="mobile-link">Activities</a>
+      <a href="#gallery" class="mobile-link">Memories</a>
+      <a href="#faq" class="mobile-link">FAQ</a>
+      <a href="dashboard.html" id="mobile-dashboard-link" class="mobile-link" style="color: var(--accent-pink);"><i class="fa-solid fa-user-circle"></i> Dashboard</a>
+      <a href="admin.html" class="btn btn-outline w-full" style="text-align: center;"><i class="fa-solid fa-user-shield"></i> Admin Portal</a>
+      <button class="btn btn-primary w-full" id="mobile-student-login-btn"><i class="fa-brands fa-google"></i> Google Sign In</button>
+    </nav>
+  </div>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-glow hero-glow-1"></div>
+      <div class="hero-glow hero-glow-2"></div>
+
+      <div class="container hero-container">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          <span id="hero-event-details">Loading schedule...</span>
+        </div>
+
+        <h1 class="hero-title">
+          Where <span class="gradient-text">2nd Year & 1st Year EEE</span> Students Connect.
+        </h1>
+
+        <p class="hero-subtitle">
+          CLIQUE takes place every Saturday in the EEE Classroom (Morning @ 9:30 AM or Afternoon @ 2:00 PM) for 1st-year EEE juniors and 2nd-year EEE seniors, featuring an epic 4-Stage Quiz Contest with official faculty certificates!
+        </p>
+
+        <!-- Countdown Timer -->
+        <div class="countdown-card glass-panel">
+          <div class="countdown-header">
+            <span class="countdown-title"><i class="fa-solid fa-trophy"></i> Next Saturday Quiz Starts In:</span>
+            <span class="countdown-badge">Saturday Session • 9:30 AM / 2:00 PM</span>
+          </div>
+          <div class="countdown-grid">
+            <div class="time-block">
+              <span class="time-number" id="cd-days">00</span>
+              <span class="time-label">Days</span>
+            </div>
+            <span class="time-colon">:</span>
+            <div class="time-block">
+              <span class="time-number" id="cd-hours">00</span>
+              <span class="time-label">Hours</span>
+            </div>
+            <span class="time-colon">:</span>
+            <div class="time-block">
+              <span class="time-number" id="cd-minutes">00</span>
+              <span class="time-label">Mins</span>
+            </div>
+            <span class="time-colon">:</span>
+            <div class="time-block">
+              <span class="time-number" id="cd-seconds">00</span>
+              <span class="time-label">Secs</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-cta-group">
+          <a href="dashboard.html" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>RSVP for Saturday Meetup</span>
+          </a>
+          <a href="#activities" class="btn btn-secondary btn-lg">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Explore Activities</span>
+          </a>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="hero-stats grid-4">
+          <div class="stat-card glass-panel">
+            <div class="stat-icon"><i class="fa-solid fa-handshake"></i></div>
+            <div class="stat-data">
+              <span class="stat-number" data-target="650">0</span><span class="plus">+</span>
+              <span class="stat-label">Bonds Created</span>
+            </div>
+          </div>
+          <div class="stat-card glass-panel">
+            <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="stat-data">
+              <span class="stat-number" data-target="48">0</span><span class="plus">+</span>
+              <span class="stat-label">Weekly Meetups</span>
+            </div>
+          </div>
+          <div class="stat-card glass-panel">
+            <div class="stat-icon"><i class="fa-solid fa-users-viewfinder"></i></div>
+            <div class="stat-data">
+              <span class="stat-number" data-target="95">0</span><span class="percent">%</span>
+              <span class="stat-label">Mentorship Match Rate</span>
+            </div>
+          </div>
+          <div class="stat-card glass-panel">
+            <div class="stat-icon"><i class="fa-solid fa-cookie-bite"></i></div>
+            <div class="stat-data">
+              <span class="stat-number" data-target="1200">0</span><span class="plus">+</span>
+              <span class="stat-label">Snacks Served</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section-padding" id="about">
+      <div class="container">
+        <div class="section-header center">
+          <span class="sub-heading">EEE Department Unity</span>
+          <h2 class="section-title">Exclusive to EEE Branch</h2>
+          <p class="section-description">
+            CLIQUE is strictly for Electrical & Electronics Engineering (EEE). We bring 1st-year EEE juniors and 2nd-year EEE seniors into one informal, welcoming room every Saturday.
+          </p>
+        </div>
+
+        <div class="grid-3 feature-cards">
+          <div class="feature-card glass-panel">
+            <div class="feature-icon bg-purple">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h3>4-Stage Quiz Tournament</h3>
+            <p>Stage 1 MCQs (Basic Engg, Current Affairs & G.K) ➔ Stage 2 Quiz ➔ Stage 3 Top 4 Teams ➔ Stage 4 Grand Finale Top 2 Teams!</p>
+          </div>
+
+          <div class="feature-card glass-panel">
+            <div class="feature-icon bg-cyan">
+              <i class="fa-solid fa-certificate"></i>
+            </div>
+            <h3>Faculty Certificate Awarding</h3>
+            <p>Winners and Runners-up are officially awarded certificates of excellence presented directly in the presence of EEE Faculty!</p>
+          </div>
+
+          <div class="feature-card glass-panel">
+            <div class="feature-icon bg-pink">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <h3>Senior-Junior EEE Unity</h3>
+            <p>Organized by 2nd-year EEE seniors for mandatory participation of 1st-year EEE juniors to build lifelong department bonds.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Weekly Schedule / Activities -->
+    <section class="section-padding alt-bg" id="activities">
+      <div class="container">
+        <div class="section-header">
+          <span class="sub-heading">Tournament Roadmap</span>
+          <h2 class="section-title">The 4 Competition Stages</h2>
+          <p class="section-description">
+            The Saturday event progresses through 4 competitive stages leading up to the grand championship ceremony.
+          </p>
+        </div>
+
+        <div class="activity-timeline">
+          <div class="timeline-item glass-panel">
+            <div class="timeline-time">Stage 1</div>
+            <div class="timeline-content">
+              <span class="activity-tag tag-purple">Elimination Round</span>
+              <h3>MCQs: Basic Engg, Current Affairs & G.K</h3>
+              <p>Multiple Choice Question test testing foundational Basic Engineering concepts, General Knowledge, and Current Affairs to filter top qualifying participants.</p>
+            </div>
+          </div>
+
+          <div class="timeline-item glass-panel">
+            <div class="timeline-time">Stage 2</div>
+            <div class="timeline-content">
+              <span class="activity-tag tag-cyan">Interactive Quiz</span>
+              <h3>Department Quiz Round</h3>
+              <p>Fast-paced interactive buzzer quiz for qualifying teams, testing problem solving, engineering logic, and quick thinking.</p>
+            </div>
+          </div>
+
+          <div class="timeline-item glass-panel">
+            <div class="timeline-time">Stage 3</div>
+            <div class="timeline-content">
+              <span class="activity-tag tag-pink">Semi-Finals</span>
+              <h3>Top 4 Teams Battle</h3>
+              <p>Head-to-head semi-final quiz round between the 4 highest-scoring qualified teams competing for the 2 final championship spots.</p>
+            </div>
+          </div>
+
+          <div class="timeline-item glass-panel">
+            <div class="timeline-time">Stage 4</div>
+            <div class="timeline-content">
+              <span class="activity-tag tag-orange">Grand Finale & Awards</span>
+              <h3>Top 2 Teams Finale & Faculty Award Ceremony</h3>
+              <p>Championship finale between the Top 2 teams! Winners and Runners-up receive official certificates presented in the presence of EEE Faculty.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Memories & Wall of Moments -->
+    <section class="section-padding alt-bg" id="gallery">
+      <div class="container">
+        <div class="section-header">
+          <span class="sub-heading">Past Sessions</span>
+          <h2 class="section-title">Wall of Memories</h2>
+          <p class="section-description">A sneak peek into our weekly energy, laughter, and high-five moments.</p>
+        </div>
+
+        <div class="gallery-filters">
+          <button class="filter-btn active" data-filter="all">All Photos</button>
+          <button class="filter-btn" data-filter="icebreakers">Icebreakers</button>
+          <button class="filter-btn" data-filter="tech">Tech & Mentorship</button>
+          <button class="filter-btn" data-filter="food">Snacks & Chills</button>
+        </div>
+
+        <div class="gallery-grid" id="gallery-grid">
+          <!-- Gallery Items -->
+          <div class="gallery-item glass-panel" data-category="icebreakers">
+            <div class="gallery-img-wrapper">
+              <div class="gallery-placeholder bg-gradient-1">
+                <i class="fa-solid fa-comments"></i>
+              </div>
+              <div class="gallery-overlay">
+                <span class="gallery-tag">Icebreaker Session</span>
+                <h4>Speed Networking Laughs</h4>
+                <p>Week #22 • EEE Department Classroom</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item glass-panel" data-category="tech">
+            <div class="gallery-img-wrapper">
+              <div class="gallery-placeholder bg-gradient-2">
+                <i class="fa-solid fa-laptop-code"></i>
+              </div>
+              <div class="gallery-overlay">
+                <span class="gallery-tag">Tech Review</span>
+                <h4>Resume & GitHub Teardown</h4>
+                <p>Week #21 • Computer Lab 3</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item glass-panel" data-category="food">
+            <div class="gallery-img-wrapper">
+              <div class="gallery-placeholder bg-gradient-3">
+                <i class="fa-solid fa-cookie-bite"></i>
+              </div>
+              <div class="gallery-overlay">
+                <span class="gallery-tag">Food Party</span>
+                <h4>Snacks & Board Games Night</h4>
+                <p>Week #20 • Amphitheatre</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item glass-panel" data-category="icebreakers">
+            <div class="gallery-img-wrapper">
+              <div class="gallery-placeholder bg-gradient-4">
+                <i class="fa-solid fa-guitar"></i>
+              </div>
+              <div class="gallery-overlay">
+                <span class="gallery-tag">Icebreaker Session</span>
+                <h4>Acoustic Jamming Session</h4>
+                <p>Week #19 • Campus Lawn</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item glass-panel" data-category="tech">
+            <div class="gallery-img-wrapper">
+              <div class="gallery-placeholder bg-gradient-5">
+                <i class="fa-solid fa-trophy"></i>
+              </div>
+              <div class="gallery-overlay">
+                <span class="gallery-tag">Tech Mentorship</span>
+                <h4>Hackathon Team Formation</h4>
+                <p>Week #18 • Innovation Cell</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item glass-panel" data-category="food">
+            <div class="gallery-img-wrapper">
+              <div class="gallery-placeholder bg-gradient-6">
+                <i class="fa-solid fa-mug-hot"></i>
+              </div>
+              <div class="gallery-overlay">
+                <span class="gallery-tag">Food & Chit-chat</span>
+                <h4>Chai & Placement Advice Session</h4>
+                <p>Week #17 • Central Canteen</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials / Wall of Love -->
+    <section class="section-padding">
+      <div class="container">
+        <div class="section-header center">
+          <span class="sub-heading">Community Vibes</span>
+          <h2 class="section-title">What Students Say</h2>
+          <p class="section-description">Real stories from seniors who mentor and juniors who found their direction.</p>
+        </div>
+
+        <div class="grid-3 testimonials-grid">
+          <div class="testimonial-card glass-panel">
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <p class="quote">"Welcoming the new batch of 1st year EEE juniors every Saturday builds awesome department bonding!"</p>
+            <div class="user-info">
+              <div class="avatar bg-purple">R</div>
+              <div>
+                <h4>Rohan Sharma</h4>
+                <span>2nd Year Senior • EEE</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card glass-panel">
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <p class="quote">"Guiding 1st year EEE juniors with circuits lab reports and EEE syllabus tips has been super rewarding!"</p>
+            <div class="user-info">
+              <div class="avatar bg-cyan">A</div>
+              <div>
+                <h4>Ananya Verma</h4>
+                <span>2nd Year Senior • EEE</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card glass-panel">
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <p class="quote">"Since attendance is mandatory for all 1st year EEE students every Saturday, I met my entire EEE batch and awesome 2nd year seniors!"</p>
+            <div class="user-info">
+              <div class="avatar bg-pink">K</div>
+              <div>
+                <h4>Kabir Mehta</h4>
+                <span>1st Year Junior • EEE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section-padding alt-bg" id="faq">
+      <div class="container">
+        <div class="section-header center">
+          <span class="sub-heading">Got Questions?</span>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+        </div>
+
+        <div class="faq-accordion">
+          <div class="faq-item glass-panel">
+            <button class="faq-question">
+              <span>What are the 4 stages of the CLIQUE event?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Stage 1 is an MCQ test on Basic Engineering, Current Affairs & G.K. Stage 2 is an interactive Quiz. Stage 3 is a semi-final showdown between the Top 4 teams, and Stage 4 is the Grand Finale between the Top 2 teams!</p>
+            </div>
+          </div>
+
+          <div class="faq-item glass-panel">
+            <button class="faq-question">
+              <span>What do the Winners and Runners-up receive?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>The Winners and Runners-up receive official certificates presented directly in the presence of EEE department faculty members during the closing ceremony!</p>
+            </div>
+          </div>
+
+          <div class="faq-item glass-panel">
+            <button class="faq-question">
+              <span>Who can participate from EEE?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Exclusively 1st-year EEE juniors and 2nd-year EEE senior mentors. 3rd and 4th year students and other engineering branches are not involved.</p>
+            </div>
+          </div>
+
+          <div class="faq-item glass-panel">
+            <button class="faq-question">
+              <span>Where and when does CLIQUE take place?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>CLIQUE is held every Saturday in the EEE Department Classroom during the Morning Session (9:30 AM) or Afternoon Session (2:00 PM).</p>
+            </div>
+          </div>
+
+          <div class="faq-item glass-panel">
+            <button class="faq-question">
+              <span>How do 2nd Year Seniors participate?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>If you are a 2nd-year EEE student, select '2nd Year Senior Mentor' when completing the RSVP form. You will help organize the 4 quiz stages, mentor 1st years, and present certificates alongside faculty!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-banner">
+      <div class="container">
+        <div class="cta-card glass-panel">
+          <h2>Ready for the EEE Quiz Championship?</h2>
+          <p>Join us this Saturday in the EEE Classroom (Morning @ 9:30 AM or Afternoon @ 2:00 PM). Mandatory attendance for 1st Year EEE!</p>
+          <a href="dashboard.html" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-ticket"></i> Reserve Your Spot Now
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <span class="logo-badge">⚡</span>
+            <span class="logo-text">CLIQUE<span class="dot">.</span></span>
+          </a>
+          <p>Bridging the gap between seniors and juniors, every single week.</p>
+        </div>
+
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <a href="#about">About CLIQUE</a>
+          <a href="#activities">Weekly Activities</a>
+          <a href="#gallery">Memory Wall</a>
+        </div>
+
+        <div class="footer-socials">
+          <h4>Connect With Us</h4>
+          <div class="social-icons">
+            <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" title="Discord"><i class="fa-brands fa-discord"></i></a>
+            <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" title="WhatsApp Community"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 CLIQUE College Community. Built for better college bonds.</p>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- Student Google Login Modal -->
+  <div class="modal-overlay" id="student-login-modal">
+    <div class="modal-card glass-panel" style="max-width: 440px; text-align: center;">
+      <button class="modal-close" id="student-login-close"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header">
+        <span class="badge-pill"><i class="fa-brands fa-google"></i> Student Authentication</span>
+        <h2>Sign In with Google</h2>
+        <p>Login using your Google Account to automatically sync your Saturday Quiz RSVP!</p>
+      </div>
+
+      <div style="padding: 1.5rem 0; display: flex; justify-content: center;">
+        <!-- Official Google Sign-In SDK Button -->
+        <div id="g_id_onload"
+             data-client_id="712129213277-vvlrfsfcto664s31bb025v4j1dgulvbj.apps.googleusercontent.com"
+             data-callback="handleGoogleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="continue_with" data-size="large" data-logo_alignment="left" style="display: flex; justify-content: center;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student History Portal Modal -->
+  <div class="modal-overlay" id="history-modal">
+    <div class="modal-card glass-panel" style="max-width: 840px; width: 95%;">
+      <button class="modal-close" id="history-modal-close"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+        <span class="badge-pill"><i class="fa-solid fa-clock-rotate-left"></i> Student Dashboard</span>
+        <h2 style="font-size: 1.6rem; margin-top: 0.2rem;">My CLIQUE Activity & Hall of Fame</h2>
+      </div>
+
+      <div style="margin: 1.5rem 0;">
+        <!-- Sub-tabs Navigation -->
+        <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+          <button class="filter-btn active" id="tab-btn-bookings" style="border-radius: var(--radius-sm); border: none; padding: 0.75rem 1.25rem;">
+            <i class="fa-solid fa-ticket"></i> My Past Bookings
+          </button>
+          <button class="filter-btn" id="tab-btn-winners" style="border-radius: var(--radius-sm); border: none; padding: 0.75rem 1.25rem;">
+            <i class="fa-solid fa-trophy"></i> Past Winners & Runners-up
+          </button>
+        </div>
+
+        <!-- Tab 1: Past Bookings -->
+        <div id="tab-content-bookings">
+          <div style="overflow-x: auto; max-height: 360px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+              <thead>
+                <tr style="background: rgba(139, 92, 246, 0.15); border-bottom: 1px solid var(--border-color); color: var(--text-primary);">
+                  <th style="padding: 0.85rem 1rem;">#</th>
+                  <th style="padding: 0.85rem 1rem;">Session Name</th>
+                  <th style="padding: 0.85rem 1rem;">Venue & Time</th>
+                  <th style="padding: 0.85rem 1rem;">Role / Year</th>
+                  <th style="padding: 0.85rem 1rem;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="history-bookings-table-body">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 2: Past Winners & Runners-up -->
+        <div id="tab-content-winners" class="hidden">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; max-height: 380px; overflow-y: auto; padding-right: 0.5rem;" id="winners-grid-container">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+
+
+</html>
